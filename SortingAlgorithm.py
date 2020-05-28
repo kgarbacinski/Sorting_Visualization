@@ -9,8 +9,14 @@ class SortingAlgorithm():
         self._name = algorithm_name
         self._rand_array = random.sample(range(WINDOW_HEIGHT), ARRAY_SIZE)
 
-    def get_rand_array(self):
+    @property
+    def rand_array(self):
         return self._rand_array
+
+    #For updating array size
+    @rand_array.setter
+    def rand_array(self, value=WINDOW_HEIGHT):
+        self._rand_array = random.sample(range(value), ARRAY_SIZE)
 
     def run(self):
         self.sort()
@@ -25,4 +31,4 @@ class BubbleSort(SortingAlgorithm):
                 if(self._rand_array[j] > self._rand_array[j + 1]):
                     self._rand_array[j], self._rand_array[j + 1] = self._rand_array[j + 1], self._rand_array[j]
 
-                    draw_rects(self, self._rand_array[j], self._rand_array[j + 1])
+            draw_rects(self, self._rand_array[j], self._rand_array[j + 1])
