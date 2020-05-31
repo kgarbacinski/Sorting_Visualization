@@ -5,9 +5,10 @@ from run import draw_rects
 import random
 
 class SortingAlgorithm():
-    def __init__(self, algorithm_name):
+    def __init__(self, algorithm_name, complexity):
         self._name = algorithm_name
-        self._rand_array = random.sample(range(WINDOW_HEIGHT), ARRAY_SIZE)
+        self._complexity = complexity
+        self._rand_array = random.sample(range(WINDOW_HEIGHT), self._complexity)
 
     @property
     def rand_array(self):
@@ -16,14 +17,14 @@ class SortingAlgorithm():
     #For updating array size
     @rand_array.setter
     def rand_array(self, value=WINDOW_HEIGHT):
-        self._rand_array = random.sample(range(value), ARRAY_SIZE)
+        self._rand_array = random.sample(range(value), self._complexity)
 
     def run(self):
         self.sort()
 
 class BubbleSort(SortingAlgorithm):
-    def __init__(self):
-        super().__init__("BubbleSort")
+    def __init__(self, complexity):
+        super().__init__("BubbleSort", complexity)
 
     def sort(self):
         for i in range (len(self._rand_array)):
@@ -31,4 +32,4 @@ class BubbleSort(SortingAlgorithm):
                 if(self._rand_array[j] > self._rand_array[j + 1]):
                     self._rand_array[j], self._rand_array[j + 1] = self._rand_array[j + 1], self._rand_array[j]
 
-            draw_rects(self, self._rand_array[j], self._rand_array[j + 1])
+                    draw_rects(self, self._complexity, self._rand_array[j], self._rand_array[j + 1])

@@ -1,5 +1,7 @@
 import pygame
 
+from constants import FONT_NAME
+
 class Button:
     def __init__(self, color, x, y, width, height, text="", text_size=60):
         self._is_pressed = False
@@ -52,8 +54,8 @@ class Button:
 
         pygame.draw.rect(surf, self._color, (self._x, self._y, self._width, self._height), 0)
 
-        if(self.text != ''):
-            font = pygame.font.SysFont('comicsans', self._text_size)
+        if(self._text != ''):
+            font = pygame.font.SysFont(FONT_NAME, self._text_size)
             text = font.render(self._text, 1, (255,255,255))
             surf.blit(text, ((self._x + (self._width / 2 - text.get_width() / 2)), self._y + (self._height / 2 - text.get_height()/2)))
 
