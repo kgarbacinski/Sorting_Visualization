@@ -3,17 +3,20 @@ import constants
 
 from Button import Button
 
-display = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.WINDOW_HEIGHT))
-button_start = Button((0,0,0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2 - 100, 250, 100, "START")
-
 def init_screen():
-    global display
-    pygame.display.update()
     pygame.init()
     pygame.display.set_caption("Sorting Visualizer")
+
     display = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.WINDOW_HEIGHT))
 
+    display.fill(pygame.Color("White"))
+    pygame.display.update()
+
     return display
+
+display = init_screen()
+button_start = Button((0,0,0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2 - 150, 250, 100, "START")
+button_generate = Button((0,0,0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2, 250, 50, "GENERATE", 30)
 
 def check_events():
     for event in pygame.event.get():
@@ -22,17 +25,24 @@ def check_events():
         if event.type == pygame.MOUSEMOTION:
             if button_start.is_over(pos):
                 button_start.set_hover()
-
             else:
                 button_start.del_hover()
 
+            if button_generate.is_over(pos):
+                button_generate.set_hover()
+
+            else:
+                button_generate.del_hover()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             if button_start.is_over(pos):
-                button_start.set_text("STOP")
+                button_start.is_pressed = True
 
-                return False
+            if button_generate.is_over(pos):
+                button_generate.is_pressed = True
 
-        if(event.type == pygame.QUIT):
+
+        if event.type == pygame.QUIT:
             pygame.quit()
 
     return True
@@ -40,6 +50,7 @@ def check_events():
 def draw_menu():
     display.fill(pygame.Color("White"),(constants.WINDOW_WIDTH, 0, constants.MENU_WIDTH, constants.WINDOW_HEIGHT))
     button_start.draw(display)
+    button_generate.draw(display)
     pygame.display.update(constants.WINDOW_WIDTH, 0, constants.MENU_WIDTH, constants.WINDOW_HEIGHT)
 
 
@@ -61,18 +72,24 @@ def draw_rects(algorithm, elem_a=None, elem_b=None):
 def main():
     from SortingAlgorithm import BubbleSort
 
-    display = init_screen()
+    running = True
+    while(running):
+        check_events()
+        if button_start.is_pressed:
+            try:
+                sorting_algorithm.run()
+                del sorting_algorithm
+            except:
+                pass
+            finally:
+                button_start.is_pressed = False
 
-    sorting_algorithm = BubbleSort()
-    draw_rects(sorting_algorithm)
+        if button_generate.is_pressed:
+            sorting_algorithm = BubbleSort()
+            draw_rects(sorting_algorithm)
+            button_generate.is_pressed = False
 
-    #While not pressed START
-    while(check_events()):
         draw_menu()
-
-    draw_menu()
-    sorting_algorithm.run()
-
 
 if __name__ == "__main__":
     main()
