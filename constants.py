@@ -1,6 +1,6 @@
 #WINDOW PROP
-SCREEN_WIDTH = 1680 #drawable part of screen
-WINDOW_WIDTH = 1024
+SCREEN_WIDTH = 1500 #Whole screen
+WINDOW_WIDTH = 1024  # Drawable part of screen
 WINDOW_HEIGHT = 512
 ARRAY_SIZE = 8 #default, 2^n
 MENU_WIDTH = SCREEN_WIDTH - WINDOW_WIDTH
