@@ -3,7 +3,7 @@ import pygame
 from constants import FONT_NAME
 
 class Button:
-    def __init__(self, color, x, y, width, height, text="", text_size=60):
+    def __init__(self, color, x, y, width, height, text="", text_size=60, is_pressed=False):
         self._is_pressed = False
         self._color = color
         self._x = x
@@ -12,6 +12,7 @@ class Button:
         self._height = height
         self._text = text
         self._text_size = text_size
+        self.is_pressed = is_pressed
 
     @property
     def x(self):
