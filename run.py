@@ -17,16 +17,32 @@ def init_screen():
 
 display = init_screen()
 
+button_bubble_sort = Button((0,0,0), constants.WINDOW_WIDTH, 0, 140, 40, "BUBBLE SORT", 25, True)
+button_bubble_sort.set_hover()
+
+button_quick_sort = Button((0, 0, 0), constants.WINDOW_WIDTH + 150, 0, 140, 40, "QUICK SORT", 25)
+
 button_start = Button((0,0,0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2 - 150, 250, 100, "START")
 button_generate = Button((0,0,0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2, 250, 50, "GENERATE", 30)
 
-complex_slider = Slider("Complexity", 2, 512, 2, 1200)
+complex_slider = Slider("Complexity", 2, 512, 2, 1100)
 
 def check_events():
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
 
         if event.type == pygame.MOUSEMOTION:
+            if button_bubble_sort.is_over(pos):
+                button_bubble_sort.set_hover()
+            elif not button_bubble_sort.is_pressed:
+                button_bubble_sort.del_hover()
+
+            if button_quick_sort.is_over(pos):
+                button_quick_sort.set_hover()
+            elif not button_quick_sort.is_pressed:
+                button_quick_sort.del_hover()
+
+
             if button_start.is_over(pos):
                 button_start.set_hover()
             else:
@@ -39,6 +55,16 @@ def check_events():
                 button_generate.del_hover()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if button_bubble_sort.is_over(pos):
+                button_quick_sort.is_pressed = False
+                button_bubble_sort.is_pressed = True
+                return True
+
+            if button_quick_sort.is_over(pos):
+                button_bubble_sort.is_pressed = False
+                button_quick_sort.is_pressed = True
+                return True
+
             if button_start.is_over(pos):
                 button_start.is_pressed = True
 
@@ -55,12 +81,15 @@ def check_events():
         if event.type == pygame.QUIT:
             pygame.quit()
 
-    return True
+    return False
 
 def draw_menu():
     display.fill(pygame.Color("White"),(constants.WINDOW_WIDTH, 0, constants.MENU_WIDTH, constants.WINDOW_HEIGHT))
 
     button_start.draw(display)
+    button_bubble_sort.draw(display)
+    button_quick_sort.draw(display)
+
     button_generate.draw(display)
     complex_slider.draw(display)
 
@@ -71,7 +100,7 @@ def draw_rects(algorithm, complexity, elem_a=None, elem_b=None):
     display.fill(pygame.Color("White"), (0, 0, constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 
     rand_array = algorithm.rand_array
-    ratio = int(constants.WINDOW_WIDTH / complexity);
+    ratio = int(constants.WINDOW_WIDTH / complexity)
 
     space = int(constants.WINDOW_WIDTH / complexity)
 
@@ -83,14 +112,25 @@ def draw_rects(algorithm, complexity, elem_a=None, elem_b=None):
 
     pygame.display.update(0, 0, constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT)
 
-def main():
-    from SortingAlgorithm import BubbleSort
+def set_sorting_algorithm(complexity):
+    from SortingAlgorithm import BubbleSort, QuickSort
 
-    complexity = 0
-     #2^n
+    if button_bubble_sort.is_pressed:
+        return BubbleSort(complexity)
+    elif button_quick_sort.is_pressed:
+        return QuickSort(complexity)
+
+def main():
+    complexity = 2
+    #2^n
     running = True
     while(running):
-        check_events()
+        is_type_changed = check_events()
+
+        if is_type_changed:
+            sorting_algorithm = set_sorting_algorithm(complexity)
+            draw_rects(sorting_algorithm, complexity)
+
         if button_start.is_pressed:
             try:
                 sorting_algorithm.run()
@@ -101,7 +141,8 @@ def main():
                 button_start.is_pressed = False
 
         if button_generate.is_pressed:
-            sorting_algorithm = BubbleSort(complexity)
+            sorting_algorithm = set_sorting_algorithm(complexity)
+
             draw_rects(sorting_algorithm, complexity)
             button_generate.is_pressed = False
 
@@ -111,10 +152,13 @@ def main():
             new_complexity = complex_slider.power
             if new_complexity != complexity:
                 complexity = new_complexity
-                sorting_algorithm = BubbleSort(complexity)
+
+                sorting_algorithm = set_sorting_algorithm(complexity)
+
                 draw_rects(sorting_algorithm, complexity)
 
         draw_menu()
+
 
 if __name__ == "__main__":
     main()

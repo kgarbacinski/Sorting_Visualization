@@ -32,4 +32,32 @@ class BubbleSort(SortingAlgorithm):
                 if(self._rand_array[j] > self._rand_array[j + 1]):
                     self._rand_array[j], self._rand_array[j + 1] = self._rand_array[j + 1], self._rand_array[j]
 
-                    draw_rects(self, self._complexity, self._rand_array[j], self._rand_array[j + 1])
+                draw_rects(self, self._complexity, self._rand_array[j], self._rand_array[j + 1])
+
+class QuickSort(SortingAlgorithm):
+    def __init__(self, complexity):
+        super().__init__("QuickSort", complexity)
+
+    def partition(self,start, end):
+        x = self._rand_array[end]
+        i = start - 1
+        for j in range(start, end + 1, 1):
+            if self._rand_array[j] <= x:
+                i += 1
+                if i < j:
+                    self._rand_array[i], self._rand_array[j] = self._rand_array[j], self._rand_array[i]
+                    draw_rects(self, self._complexity, self._rand_array[i], self._rand_array[j])
+
+        return i
+
+    def sort(self, start=0, end=None):
+        if end is None:
+            end = self._complexity - 1
+
+        if start < end:
+            pivot = self.partition(start,end)
+            self.sort(start, pivot-1)
+            self.sort(pivot+1, end)
+
+
+
