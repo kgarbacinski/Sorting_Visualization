@@ -1,5 +1,4 @@
 from constants import WINDOW_WIDTH, WINDOW_HEIGHT, ARRAY_SIZE
-
 from run import draw_rects
 
 import random
@@ -58,6 +57,26 @@ class QuickSort(SortingAlgorithm):
             pivot = self.partition(start,end)
             self.sort(start, pivot-1)
             self.sort(pivot+1, end)
+
+class InsertionSort(SortingAlgorithm):
+    def __init__(self, complexity):
+        super().__init__("InsertionSort", complexity)
+
+    def sort(self):
+        for i in range(len(self._rand_array) - 2, -1, -1):
+            key = self._rand_array[i]
+            j = i + 1
+
+            while (j < len(self._rand_array)) and (key > self._rand_array[j]):
+                self._rand_array[j], self._rand_array[j - 1] = self._rand_array[j-1], self._rand_array[j]
+                j += 1
+
+                draw_rects(self, self._complexity)
+
+            self._rand_array[j - 1] = key
+
+            draw_rects(self, self._complexity)
+
 
 
 

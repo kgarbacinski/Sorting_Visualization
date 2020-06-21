@@ -15,68 +15,79 @@ def init_screen():
 
     return display
 
-display = init_screen()
+DISPLAY = init_screen()
 
-button_bubble_sort = Button((0,0,0), constants.WINDOW_WIDTH, 0, 140, 40, "BUBBLE SORT", 25, True)
-button_bubble_sort.set_hover()
+BUBBLE_SORT_BTN = Button((0, 0, 0), constants.WINDOW_WIDTH, 0, 140, 40, "BUBBLE SORT", 22, True)
+QUICK_SORT_BTN = Button((0, 0, 0), constants.WINDOW_WIDTH + 150, 0, 140, 40, "QUICK SORT", 22)
+INSERT_SORT_BTN = Button((0, 0, 0), constants.WINDOW_WIDTH + 300, 0, 140, 40, "INSERTION SORT", 22)
 
-button_quick_sort = Button((0, 0, 0), constants.WINDOW_WIDTH + 150, 0, 140, 40, "QUICK SORT", 25)
+START_BTN = Button((0, 0, 0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2 - 150, 250, 100, "START")
+GENERATE_BTN = Button((0, 0, 0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2, 250, 50, "GENERATE", 30)
 
-button_start = Button((0,0,0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2 - 150, 250, 100, "START")
-button_generate = Button((0,0,0), constants.WINDOW_WIDTH + constants.MENU_WIDTH / 2 - 125, constants.WINDOW_HEIGHT / 2, 250, 50, "GENERATE", 30)
-
-complex_slider = Slider("Complexity", 2, 512, 2, 1100)
+COMPLEX_SLIDER = Slider("Complexity", 2, 512, 2, 1100)
 
 def check_events():
     for event in pygame.event.get():
         pos = pygame.mouse.get_pos()
 
         if event.type == pygame.MOUSEMOTION:
-            if button_bubble_sort.is_over(pos):
-                button_bubble_sort.set_hover()
-            elif not button_bubble_sort.is_pressed:
-                button_bubble_sort.del_hover()
+            if BUBBLE_SORT_BTN.is_over(pos):
+                BUBBLE_SORT_BTN.set_hover()
+            elif not BUBBLE_SORT_BTN.is_pressed:
+                BUBBLE_SORT_BTN.del_hover()
 
-            if button_quick_sort.is_over(pos):
-                button_quick_sort.set_hover()
-            elif not button_quick_sort.is_pressed:
-                button_quick_sort.del_hover()
+            if QUICK_SORT_BTN.is_over(pos):
+                QUICK_SORT_BTN.set_hover()
+            elif not QUICK_SORT_BTN.is_pressed:
+                QUICK_SORT_BTN.del_hover()
 
+            if INSERT_SORT_BTN.is_over(pos):
+                INSERT_SORT_BTN.set_hover()
+            elif not INSERT_SORT_BTN.is_pressed:
+                INSERT_SORT_BTN.del_hover()
 
-            if button_start.is_over(pos):
-                button_start.set_hover()
+            if START_BTN.is_over(pos):
+                START_BTN.set_hover()
             else:
-                button_start.del_hover()
+                START_BTN.del_hover()
 
-            if button_generate.is_over(pos):
-                button_generate.set_hover()
+            if GENERATE_BTN.is_over(pos):
+                GENERATE_BTN.set_hover()
 
             else:
-                button_generate.del_hover()
+                GENERATE_BTN.del_hover()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if button_bubble_sort.is_over(pos):
-                button_quick_sort.is_pressed = False
-                button_bubble_sort.is_pressed = True
+            if BUBBLE_SORT_BTN.is_over(pos):
+                INSERT_SORT_BTN.is_pressed = False
+                QUICK_SORT_BTN.is_pressed = False
+                BUBBLE_SORT_BTN.is_pressed = True
                 return True
 
-            if button_quick_sort.is_over(pos):
-                button_bubble_sort.is_pressed = False
-                button_quick_sort.is_pressed = True
+            if QUICK_SORT_BTN.is_over(pos):
+                INSERT_SORT_BTN.is_pressed = False
+                BUBBLE_SORT_BTN.is_pressed = False
+                QUICK_SORT_BTN.is_pressed = True
                 return True
 
-            if button_start.is_over(pos):
-                button_start.is_pressed = True
+            if INSERT_SORT_BTN.is_over(pos):
+                QUICK_SORT_BTN.is_pressed = False
+                BUBBLE_SORT_BTN.is_pressed = False
+                INSERT_SORT_BTN.is_pressed = True
+                return True
 
-            if button_generate.is_over(pos):
-                button_generate.is_pressed = True
+            if START_BTN.is_over(pos):
+                START_BTN.is_pressed = True
+
+            if GENERATE_BTN.is_over(pos):
+                GENERATE_BTN.is_pressed = True
 
             #Slider
-            if complex_slider._button_rect.collidepoint(pos):
-                complex_slider.is_hit = True
+            if COMPLEX_SLIDER._button_rect.collidepoint(pos):
+                COMPLEX_SLIDER.is_hit = True
 
         if event.type == pygame.MOUSEBUTTONUP:
-            complex_slider.is_hit = False
+            COMPLEX_SLIDER.is_hit = False
 
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -84,20 +95,21 @@ def check_events():
     return False
 
 def draw_menu():
-    display.fill(pygame.Color("White"),(constants.WINDOW_WIDTH, 0, constants.MENU_WIDTH, constants.WINDOW_HEIGHT))
+    DISPLAY.fill(pygame.Color("White"), (constants.WINDOW_WIDTH, 0, constants.MENU_WIDTH, constants.WINDOW_HEIGHT))
 
-    button_start.draw(display)
-    button_bubble_sort.draw(display)
-    button_quick_sort.draw(display)
+    START_BTN.draw(DISPLAY)
+    BUBBLE_SORT_BTN.draw(DISPLAY)
+    QUICK_SORT_BTN.draw(DISPLAY)
+    INSERT_SORT_BTN.draw(DISPLAY)
 
-    button_generate.draw(display)
-    complex_slider.draw(display)
+    GENERATE_BTN.draw(DISPLAY)
+    COMPLEX_SLIDER.draw(DISPLAY)
 
     pygame.display.update(constants.WINDOW_WIDTH, 0, constants.MENU_WIDTH, constants.WINDOW_HEIGHT)
 
 
 def draw_rects(algorithm, complexity, elem_a=None, elem_b=None):
-    display.fill(pygame.Color("White"), (0, 0, constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
+    DISPLAY.fill(pygame.Color("White"), (0, 0, constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT))
 
     rand_array = algorithm.rand_array
     ratio = int(constants.WINDOW_WIDTH / complexity)
@@ -105,7 +117,7 @@ def draw_rects(algorithm, complexity, elem_a=None, elem_b=None):
     space = int(constants.WINDOW_WIDTH / complexity)
 
     for i, value in enumerate(rand_array):
-        pygame.draw.rect(display, (0,0,0), (ratio * i, constants.WINDOW_HEIGHT, space, -value))
+        pygame.draw.rect(DISPLAY, (0, 0, 0), (ratio * i, constants.WINDOW_HEIGHT, space, -value))
         #import pdb; pdb.set_trace()
 
     check_events()
@@ -113,12 +125,14 @@ def draw_rects(algorithm, complexity, elem_a=None, elem_b=None):
     pygame.display.update(0, 0, constants.WINDOW_WIDTH, constants.WINDOW_HEIGHT)
 
 def set_sorting_algorithm(complexity):
-    from SortingAlgorithm import BubbleSort, QuickSort
+    from Algorithm import BubbleSort, QuickSort, InsertionSort
 
-    if button_bubble_sort.is_pressed:
+    if BUBBLE_SORT_BTN.is_pressed:
         return BubbleSort(complexity)
-    elif button_quick_sort.is_pressed:
+    elif QUICK_SORT_BTN.is_pressed:
         return QuickSort(complexity)
+    elif INSERT_SORT_BTN.is_pressed:
+        return InsertionSort(complexity)
 
 def main():
     complexity = 2
@@ -131,25 +145,26 @@ def main():
             sorting_algorithm = set_sorting_algorithm(complexity)
             draw_rects(sorting_algorithm, complexity)
 
-        if button_start.is_pressed:
+        if START_BTN.is_pressed:
             try:
                 sorting_algorithm.run()
                 del sorting_algorithm
             except:
                 pass
             finally:
-                button_start.is_pressed = False
+                START_BTN.is_pressed = False
+                sorting_algorithm = set_sorting_algorithm(complexity)
 
-        if button_generate.is_pressed:
+        if GENERATE_BTN.is_pressed:
             sorting_algorithm = set_sorting_algorithm(complexity)
 
             draw_rects(sorting_algorithm, complexity)
-            button_generate.is_pressed = False
+            GENERATE_BTN.is_pressed = False
 
-        if complex_slider.is_hit:
-            complex_slider.move()
+        if COMPLEX_SLIDER.is_hit:
+            COMPLEX_SLIDER.move()
 
-            new_complexity = complex_slider.power
+            new_complexity = COMPLEX_SLIDER.power
             if new_complexity != complexity:
                 complexity = new_complexity
 

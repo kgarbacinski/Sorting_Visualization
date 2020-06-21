@@ -14,6 +14,9 @@ class Button:
         self._text_size = text_size
         self.is_pressed = is_pressed
 
+        if is_pressed:
+            self.set_hover()
+
     @property
     def x(self):
         return self._x
